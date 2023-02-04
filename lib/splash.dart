@@ -39,7 +39,7 @@ class _SplashState extends State<Splash> {
         child: _controller.value.isInitialized? AspectRatio(aspectRatio: _controller.value.aspectRatio,child: VideoPlayer(_controller),):Container(color: Colors.amber,),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-
+//this is nihtihn Naidoajodjaslcx
       )
     );
   }
