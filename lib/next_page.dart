@@ -1,30 +1,26 @@
-import 'package:dummy/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dummy/authorize.dart';
+
+import 'package:dummy/login_or_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'login_or_register.dart';
 
 class NextPage extends StatefulWidget {
-
   @override
   State<NextPage> createState() => _NextPageState();
 }
 
-
 class _NextPageState extends State<NextPage> {
-  // get name => FirebaseAuth.instance.currentUser!.displayName!;
-  // get getImage => FirebaseAuth.instance.currentUser!.photoURL;
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        color: Color(0xFFFC4F4F),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+        color: const Color(0xFFFC4F4F),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: GNav(
             padding: EdgeInsets.all(8),
             backgroundColor: Color(0xFFFC4F4F),
@@ -37,18 +33,17 @@ class _NextPageState extends State<NextPage> {
                 icon: Icons.home,
                 text: 'Home',
               ),
-
               GButton(
                 icon: Icons.event,
-                text: 'Events',
+                text: 'Map',
               ),
               GButton(
                 icon: Icons.food_bank_outlined,
                 text: 'Food Order',
               ),
               GButton(
-                icon: Icons.settings,
-                text: 'Settings',
+                icon: Icons.map_outlined,
+                text: 'Map',
               ),
             ],
           ),
@@ -60,13 +55,24 @@ class _NextPageState extends State<NextPage> {
               onPressed: () async {
                 await GoogleSignIn().signOut();
                 FirebaseAuth.instance.signOut();
-                print(MediaQuery.of(context).size.width);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginOrRegister()));
               },
               icon: const Icon(Icons.power_settings_new))
         ],
+        title: Container(
+          child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.email!)
+                  .get(),
+              builder: (context, snapshot) {
 
-        title: Text('Welcome ',),
-        backgroundColor: Color(0xFFFC4F4F),
+                  return Text('Welcome ' + snapshot.data!['name']);
+
+              }),
+        ),
+        backgroundColor: const Color(0xFFFC4F4F),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(10),
