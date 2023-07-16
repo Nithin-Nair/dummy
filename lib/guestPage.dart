@@ -34,10 +34,6 @@ class _NextPageState extends State<NextPage> {
                 text: 'Home',
               ),
               GButton(
-                icon: Icons.event,
-                text: 'Map',
-              ),
-              GButton(
                 icon: Icons.food_bank_outlined,
                 text: 'Food Order',
               ),
@@ -63,12 +59,12 @@ class _NextPageState extends State<NextPage> {
         title: Container(
           child: FutureBuilder(
               future: FirebaseFirestore.instance
-                  .collection('users')
+                  .collection('guests')
                   .doc(FirebaseAuth.instance.currentUser!.email!)
                   .get(),
               builder: (context, snapshot) {
 
-                  return Text('Welcome ' + snapshot.data!['name']);
+                return Text('Welcome ' + snapshot.data!['name']);
 
               }),
         ),

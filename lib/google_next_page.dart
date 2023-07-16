@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class NextPage extends StatefulWidget {
+class GoogleNextPage extends StatefulWidget {
   @override
-  State<NextPage> createState() => _NextPageState();
+  State<GoogleNextPage> createState() => _GoogleNextPageState();
 }
 
-class _NextPageState extends State<NextPage> {
+class _GoogleNextPageState extends State<GoogleNextPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +35,15 @@ class _NextPageState extends State<NextPage> {
               ),
               GButton(
                 icon: Icons.event,
-                text: 'Map',
+                text: 'Events',
               ),
               GButton(
                 icon: Icons.food_bank_outlined,
                 text: 'Food Order',
               ),
               GButton(
-                icon: Icons.map_outlined,
-                text: 'Map',
+                icon: Icons.settings,
+                text: 'Settings',
               ),
             ],
           ),
@@ -60,18 +60,7 @@ class _NextPageState extends State<NextPage> {
               },
               icon: const Icon(Icons.power_settings_new))
         ],
-        title: Container(
-          child: FutureBuilder(
-              future: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.email!)
-                  .get(),
-              builder: (context, snapshot) {
-
-                  return Text('Welcome ' + snapshot.data!['name']);
-
-              }),
-        ),
+        title: Text('Welcome '+FirebaseAuth.instance.currentUser!.displayName!),
         backgroundColor: const Color(0xFFFC4F4F),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(

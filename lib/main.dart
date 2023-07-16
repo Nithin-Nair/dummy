@@ -1,17 +1,33 @@
+// ignore_for_file: prefer_const_constructors
+import 'package:dummy/Authpage.dart';
 import 'package:flutter/material.dart';
-import 'splash.dart';
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Splash(),
+    return  MaterialApp(
+      debugShowCheckedModeBanner: false,
+      navigatorKey: GlobalContextService.navigatorKey,
+      home:AuthPage(),
     );
   }
+}
+
+class GlobalContextService {
+  static GlobalKey <NavigatorState> navigatorKey =
+  GlobalKey <NavigatorState> ();
 }
