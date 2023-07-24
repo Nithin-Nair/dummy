@@ -1,10 +1,10 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dummy/login_or_register.dart';
+import 'package:dummy/Login/login_or_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;

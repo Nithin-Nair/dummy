@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:dummy/Authpage.dart';
+import 'package:dummy/Login/Authpage.dart';
+import 'package:dummy/minor%20screens/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 void main() async{
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: GlobalContextService.navigatorKey,
-      home:AuthPage(),
+      home:Splash(),
     );
   }
 }
