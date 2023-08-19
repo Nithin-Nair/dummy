@@ -1,6 +1,6 @@
 
 import 'package:dummy/next_page.dart';
-import 'package:dummy/majorScreen/userHomescreen.dart';
+import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login_or_register.dart';

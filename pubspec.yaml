@@ -41,6 +41,9 @@ dependencies:
   cloud_firestore:
   shared_preferences:
   image_picker:
+  firebase_storage:
+  uuid:
+  carousel_slider:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -77,6 +80,7 @@ flutter:
      - assets/images/
      - assets/images/food Stores/
      - assets/images/food items/
+     - assets/images/home/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

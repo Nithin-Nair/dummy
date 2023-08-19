@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Login/Authpage.dart';
 import 'package:dummy/Login/userManagement.dart';
 import 'package:dummy/next_page.dart';
-import 'package:dummy/majorScreen/userHomescreen.dart';
+import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../events and cells/eventAndCellAdmin.dart';
-import '../foodStores/food Store owners pages/foodStoreOwner.dart';
+import '../foodStores/food Store owners pages/foodStoreOwnerNavBar.dart';
 import 'authorize.dart';
 import '../main.dart';
 
@@ -22,68 +22,75 @@ class LoginPage extends StatefulWidget {
 
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
-void signUserIn(BuildContext context) async {
-  showDialog(
-      context: GlobalContextService.navigatorKey.currentContext!,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      });
 
-  try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text, password: passwordController.text);
-    Navigator.pop(GlobalContextService.navigatorKey.currentContext!);
-    User? user=FirebaseAuth.instance.currentUser;
-    if( user != null){
-      FirebaseFirestore.instance.collection('users').where('email',isEqualTo: user.email).get().then((docs) async {
-        if (docs.docs[0].exists && docs.docs[0].data()['role']=='cellAdmin') {
-          var fsname=docs.docs[0].data()['name'];
-          final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-          sharedPreferences.setString('role', docs.docs[0].data()['role']);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>CellAdmin()));
-        }
-        else if(docs.docs[0].exists && docs.docs[0].data()['role']=='foodStoreOwner') {
-          var fsname=docs.docs[0].data()['name'];
-          final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-          sharedPreferences.setString('role', docs.docs[0].data()['role']);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>FoodStoreOwner(fsname: fsname,)));
-        }
-
-        else if(docs.docs[0].exists && docs.docs[0].data()['role']=='user') {
-          var fsname=docs.docs[0].data()['name'];
-          final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-          sharedPreferences.setString('role', docs.docs[0].data()['role']);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>userHomescreen()));
-        }
-      });
-    }
-
-  } on FirebaseAuthException catch (e) {
-    Navigator.pop(GlobalContextService.navigatorKey.currentContext!);
-    if (e.code == 'user-not-found') {
-      showDialog(
-          context: GlobalContextService.navigatorKey.currentContext!,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('User not Found'),
-            );
-          });
-    } else if (e.code == 'wrong-password') {
-      showDialog(
-          context: GlobalContextService.navigatorKey.currentContext!,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Wrong Password'),
-            );
-          });
-    }
-  }
-}
 
 class _LoginPageState extends State<LoginPage> {
   @override
+  String? email;
+  String? password ;
+  void signUserIn(BuildContext context) async {
+    showDialog(
+        context: GlobalContextService.navigatorKey.currentContext!,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email.toString(), password: password.toString());
+      Navigator.pop(GlobalContextService.navigatorKey.currentContext!);
+      User? user=FirebaseAuth.instance.currentUser;
+      if( user != null){
+        FirebaseFirestore.instance.collection('users').where('email',isEqualTo: user.email).get().then((docs) async {
+          if (docs.docs[0].exists && docs.docs[0].data()['role']=='cellAdmin') {
+            var fsname=docs.docs[0].data()['name'];
+            // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+            // sharedPreferences.setString('role', docs.docs[0].data()['role']);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Admin()));
+          }
+          else if(docs.docs[0].exists && docs.docs[0].data()['role']=='foodStoreOwner') {
+            var fsname=docs.docs[0].data()['name'];
+            // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+            // sharedPreferences.setString('role', docs.docs[0].data()['role']);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>FoodStoreOwner(fsname: fsname,)));
+          }
+
+          else if(docs.docs[0].exists && docs.docs[0].data()['role']=='user') {
+            var fsname=docs.docs[0].data()['name'];
+            // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+            // sharedPreferences.setString('role', docs.docs[0].data()['role']);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>userHomescreen()));
+          }
+        });
+      }
+
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(GlobalContextService.navigatorKey.currentContext!);
+      if (e.code == 'user-not-found') {
+        showDialog(
+            context: GlobalContextService.navigatorKey.currentContext!,
+            builder: (context) {
+              return const AlertDialog(
+                title: Text('User not Found'),
+              );
+            });
+      } else if (e.code == 'wrong-password') {
+        showDialog(
+            context: GlobalContextService.navigatorKey.currentContext!,
+            builder: (context) {
+              return const AlertDialog(
+                title: Text('Wrong Password'),
+              );
+            });
+      }
+    }
+  }
+
+
+
+
   Widget build(BuildContext context) {
     final widthof = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -144,49 +151,34 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color.fromRGBO(196, 135, 198, 1),
-                              blurRadius: 20,
-                              offset: Offset(0, 10))
-                        ]),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(color: Colors.grey))),
-                          child: TextField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Email',
-                                hintStyle: TextStyle(color: Colors.grey[300])),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          decoration: const BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(color: Colors.grey))),
-                          child: TextField(
-                            obscureText: true,
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Password',
-                                hintStyle: TextStyle(color: Colors.grey[300])),
-                          ),
-                        ),
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      TextFormField(
+                        onChanged: (value){
+                          email=value;
+                        },
+
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                            hintText: 'Enter email',
+                            labelText: 'Email',
+                            hintStyle: TextStyle(color: Colors.grey[300])),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        obscureText: true,
+                        onChanged: (value){
+                          password=value;
+                        },
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                            labelText: 'Password',
+                            hintText: 'Enter password',
+                            hintStyle: TextStyle(color: Colors.grey[300])),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 30,
