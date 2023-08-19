@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:dummy/majorScreen/whichRoleHomeScreen.dart';
+import 'package:dummy/minor%20screens/whichRoleHomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
@@ -16,16 +16,16 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   String? finalEmail;
   late VideoPlayerController _controller;
-  Future getValidationData() async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    var obtainedEmail = sharedPreferences.getString('role');
-    setState(() {
-      print(obtainedEmail);
-      finalEmail = obtainedEmail;
-      print(finalEmail);
-    });
-  }
+  // Future getValidationData() async {
+  //   final SharedPreferences sharedPreferences =
+  //       await SharedPreferences.getInstance();
+  //   var obtainedEmail = sharedPreferences.getString('role');
+  //   setState(() {
+  //     print(obtainedEmail);
+  //     finalEmail = obtainedEmail;
+  //     print(finalEmail);
+  //   });
+  // }
 
   @override
   void initState() {
@@ -38,12 +38,13 @@ class _SplashState extends State<Splash> {
 
   void play() {
     _controller.play();
-    getValidationData().whenComplete(() async {
-      Timer(const Duration(seconds: 2), (() {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: ((context) => finalEmail==null? LoginOrRegister():HomePage().UserHome(finalEmail))));
-      }));
-    });
+    Timer(const Duration(seconds: 2), (() {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: ((context) => finalEmail==null? LoginOrRegister():HomePage().UserHome(finalEmail))));
+    }));
+    // getValidationData().whenComplete(() async {
+    //
+    // });
   }
 
   Widget build(BuildContext context) {

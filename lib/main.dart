@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:dummy/Login/Authpage.dart';
 import 'package:dummy/minor%20screens/splash.dart';
+import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 void main() async{
