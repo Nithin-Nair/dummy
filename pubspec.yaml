@@ -44,6 +44,11 @@ dependencies:
   firebase_storage:
   uuid:
   carousel_slider:
+  provider:
+  cached_network_image:
+  badges:
+
+  shimmer:
 
 
   # The following adds the Cupertino Icons font to your application.
