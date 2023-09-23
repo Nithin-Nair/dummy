@@ -170,30 +170,41 @@ class _VisitStoreState extends State<VisitStore> {
           return Center(child: Text('Something went wrong!'));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return buildLoadingSkeleton(); // Show loading skeleton
+          return buildLoadingSkeleton();
         }
+
+        final dataDocs = snapshot.data?.docs;
+        if (dataDocs == null || dataDocs.isEmpty) {
+          return Center(child: Text('No food items available.'));
+        }
+
         return ListView(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic>? data =
-            document.data() as Map<String, dynamic>?;
+          children: dataDocs.map((DocumentSnapshot document) {
+            final data = document.data() as Map<String, dynamic>?;
 
             if (data == null) {
               return SizedBox.shrink();
             }
 
+            final itemName = data['item_name'] as String? ?? 'Item Name';
+            final itemImage = data['item_image'] as String? ?? '';
+            final itemPrice = (data['item_price'] as double?)?.toStringAsFixed(2) ?? '0';
+            final itemId = data['item_id'] as String? ?? '0';
+
             return buildFoodMenuItem(
-              data['item_name'] ?? 'Item Name',
-              data['item_image'] ?? '',
-              data['item_price']?.toString() ?? '0',
-              data['item_id'] ?? '0',
+              itemName,
+              itemImage,
+              itemPrice,
+              itemId,
             );
           }).toList(),
         );
       },
     );
   }
+
 
   InkWell buildFoodMenuItem(
       String itemName, String itemImage, String itemPrice, String itemId) {
@@ -282,12 +293,12 @@ class _VisitStoreState extends State<VisitStore> {
               child: Container(
                 height: 40,
                 width: 100,
-                margin: EdgeInsets.only(right: 16),
+                margin: const EdgeInsets.only(right: 16),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'Add to Cart',
                     style: TextStyle(

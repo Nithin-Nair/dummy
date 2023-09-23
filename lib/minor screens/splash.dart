@@ -28,28 +28,26 @@ class _SplashState extends State<Splash> {
   void play() {
     _controller.play();
     Timer(const Duration(seconds: 2), () {
-      getValidationData().then((obtainedEmail) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => finalEmail == null
-                ? LoginOrRegister()
-                : HomePage().UserHome(finalEmail),
-          ),
-        );
-      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => finalEmail == null
+              ? LoginOrRegister()
+              : HomePage().UserHome(finalEmail),
+        ),
+      );
     });
   }
 
-  Future<String?> getValidationData() async {
-    final SharedPreferences sharedPreferences =
-    await SharedPreferences.getInstance();
-    final obtainedEmail = sharedPreferences.getString('role');
-    setState(() {
-      finalEmail = obtainedEmail;
-    });
-    return finalEmail;
-  }
+  // Future<String?> getValidationData() async {
+  //   final SharedPreferences sharedPreferences =
+  //   await SharedPreferences.getInstance();
+  //   final obtainedEmail = sharedPreferences.getString('role');
+  //   setState(() {
+  //     finalEmail = obtainedEmail;
+  //   });
+  //   return finalEmail;
+  // }
 
   @override
   void dispose() {

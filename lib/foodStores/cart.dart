@@ -4,6 +4,8 @@ import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../majorScreen/paymentscreen.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
 
@@ -40,37 +42,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             SizedBox(height: 50),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xff252525), // Button background color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                minimumSize: Size(
-                  MediaQuery.of(context).size.width * 0.6,
-                  0,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => userHomescreen(),
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Go to Home',
-                  style: TextStyle(
-                    color: Colors.white, // Button text color
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+
           ],
         ),
       )
@@ -307,10 +279,10 @@ class _CartScreenState extends State<CartScreen> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: Provider.of<Cart>(context).totalAmount * 1.07==0.00?  null: () {
-                      print('hoo');
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PaymentScreen(totalPrice: Provider.of<Cart>(context).totalAmount * 1.07,)));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),

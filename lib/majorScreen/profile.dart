@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Login/login_or_register.dart';
+import '../foodStores/orderScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -15,25 +16,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Text('Something went wrong!!');
+          return Center(child: Text('Something went wrong!!'));
         }
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return Text('Document doesn\'t exist.');
+          return Center(child: Text("Document doesn't exist."));
         }
 
         final data = snapshot.data!.data() as Map<String, dynamic>;
 
         return Scaffold(
-          backgroundColor: Color(0xffe6ebec),
+          backgroundColor: Color(0xFFf2f2f2),
           appBar: AppBar(
+              centerTitle: true,
             backgroundColor: Color(0xff252525),
-            title: Text('My Profile'),
+            title: Text(
+              'My Profile',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(16),
@@ -42,7 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 CircleAvatar(
                   radius: 80,
-                  backgroundImage: CachedNetworkImageProvider(data['profile_image']),
+                  backgroundImage:
+                      CachedNetworkImageProvider(data['profile_image']),
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -61,6 +75,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SizedBox(height: 24),
+                ProfileSection(title: 'My Activity', children: [
+                  ListTile(
+                    leading: Icon(Icons.shopping_cart),
+                    title: Text('My Orders'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.event),
+                    title: Text('My Events'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Placeholder(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.location_on),
+                    title: Text('My Locations'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Placeholder(),
+                        ),
+                      );
+                    },
+                  ),
+                ]),
+                SizedBox(height: 24),
                 ProfileSection(
                   title: 'Account Info',
                   children: [
@@ -72,12 +125,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ProfileInfoItem(
                       icon: Icons.phone,
                       label: 'Phone',
-                      value: data['phone'],
+                      value:
+                          data['phone'] != '' ? data['phone'] : 'Not provided',
                     ),
                     ProfileInfoItem(
                       icon: Icons.location_on,
                       label: 'Location',
-                      value: data['address'],
+                      value: data['address'] != ''
+                          ? data['address']
+                          : 'Not provided',
                     ),
                   ],
                 ),
@@ -88,8 +144,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ProfileSettingsItem(
                       icon: Icons.lock,
                       label: 'Change Password',
-                      onTap: (){}
-                      ,
+                      onTap: () {
+                        // Implement password change logic
+                      },
                     ),
                     ProfileSettingsItem(
                       icon: Icons.logout,
@@ -127,19 +184,35 @@ class ProfileSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 3),
           ),
-        ),
-        SizedBox(height: 8),
-        ...children,
-      ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16),
+          ...children,
+        ],
+      ),
     );
   }
 }
@@ -158,9 +231,22 @@ class ProfileInfoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon),
-      title: Text(label),
-      subtitle: Text(value),
+      leading: Icon(
+        icon,
+        color: Color(0xff252525), // Icon color
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: Color(0xff252525), // Label color
+        ),
+      ),
+      subtitle: Text(
+        value,
+        style: TextStyle(
+          color: Colors.grey, // Value color
+        ),
+      ),
     );
   }
 }
@@ -179,8 +265,16 @@ class ProfileSettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon),
-      title: Text(label),
+      leading: Icon(
+        icon,
+        color: Color(0xff252525), // Icon color
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: Color(0xff252525), // Label color
+        ),
+      ),
       onTap: onTap,
     );
   }
