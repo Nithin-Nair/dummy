@@ -1,333 +1,281 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../Login/login_or_register.dart';
+import '../foodStores/orderScreen.dart';
 
-class ProfileScreen extends StatelessWidget {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-  ProfileScreen({Key? key, }) :
-        super(key: key);
+class ProfileScreen extends StatefulWidget {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-        future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong!!');
-          }
-          if (snapshot.hasData && !snapshot.data!.exists) {
-            return Text('Document doesn\'t exists.');
-          }
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Something went wrong!!'));
+        }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return Center(child: Text("Document doesn't exist."));
+        }
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            Map<String,dynamic> data=snapshot.data!.data() as Map<String,dynamic>;
+        final data = snapshot.data!.data() as Map<String, dynamic>;
 
-
-            return Scaffold(
-              backgroundColor: Colors.grey.shade300,
-              body: Stack(children: [
-                Container(
-                  height: 230,
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [ Colors.black12,Color(0xff252525),])),
+        return Scaffold(
+          backgroundColor: Color(0xFFf2f2f2),
+          appBar: AppBar(
+              centerTitle: true,
+            backgroundColor: Color(0xff252525),
+            title: Text(
+              'My Profile',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 80,
+                  backgroundImage:
+                      CachedNetworkImageProvider(data['profile_image']),
                 ),
-                CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      pinned: true,
-                      backgroundColor: Colors.white,
-                      elevation: 0,
-                      expandedHeight: 150,
-                      flexibleSpace:
-                          LayoutBuilder(builder: (context, constraints) {
-                        return FlexibleSpaceBar(
-                          centerTitle: true,
-                          title: AnimatedOpacity(
-                            curve: Curves.bounceIn,
-                            duration: const Duration(milliseconds: 200),
-                            opacity: constraints.biggest.height <= 120 ? 1 : 0,
-                            child: const Text(
-                              'Account',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                            ),
-                          ),
-                          background: Container(
-                            decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [Colors.black26,Color(0xff252525), ],)),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage:NetworkImage(data['profile_image'])
-                                    // AssetImage(
-                                    //     'assets/images/inapp/guest.jpg'),
-                                    // backgroundColor: Colors.white,
-                                  ),
-                                  SizedBox(width: 20,),
-                                  Text(
-                                    data['name']==null?'username':data['name'],
-                                    style: TextStyle(fontSize: 24),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
+                SizedBox(height: 16),
+                Text(
+                  data['name'],
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  data['email'],
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 24),
+                ProfileSection(title: 'My Activity', children: [
+                  ListTile(
+                    leading: Icon(Icons.shopping_cart),
+                    title: Text('My Orders'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.event),
+                    title: Text('My Events'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Placeholder(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.location_on),
+                    title: Text('My Locations'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Placeholder(),
+                        ),
+                      );
+                    },
+                  ),
+                ]),
+                SizedBox(height: 24),
+                ProfileSection(
+                  title: 'Account Info',
+                  children: [
+                    ProfileInfoItem(
+                      icon: Icons.email,
+                      label: 'Email',
+                      value: data['email'],
                     ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * .90,
-                            height: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Colors.white),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width * .2,
-                                  height: 60,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.black54,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30),
-                                      topLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30),
-                                      bottomLeft: Radius.circular(30),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'My Orders',
-                                      style: TextStyle(
-                                      fontSize: 15, color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width * .2,
-                                  height: 60,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xff707070),
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30),
-                                      topLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30),
-                                      bottomLeft: Radius.circular(30),
-                                    ),
-
-                                  ),
-                                  child: const Center(
-                                      child: Text(
-                                    'My Orders',
-                                    style: TextStyle(fontSize: 15,color: Colors.white),
-                                  )),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width * .2,
-                                  height: 60,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.black54,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(30),
-                                      topLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30),
-                                      bottomLeft: Radius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Center(
-                                      child: Text(
-                                    'My Places',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.white),
-                                  )),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            color: Colors.grey.shade300,
-                            child: Column(
-                              children: [
-                                const ProfileHeaderLabel(
-                                  label: ' Account Info. ',
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Container(
-                                    height: 260,
-                                    // width
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: Colors.white),
-                                    child: Column(
-                                      children: [
-                                        RepeatedListTile(
-                                          title: 'Email',
-                                          subtitle:
-                                              data['email'],
-                                          icon: Icons.email_outlined,
-                                        ),
-                                        YellowDivider(),
-                                        RepeatedListTile(
-                                            title: 'Location',
-                                            subtitle: data['address'],
-                                            icon: Icons.home),
-                                        YellowDivider(),
-                                        RepeatedListTile(
-                                            title: 'Phone no.',
-                                            subtitle: data['phone'],
-                                            icon: Icons.phone)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const ProfileHeaderLabel(
-                                    label: 'Account Settings '),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Container(
-                                    height: 260,
-                                    // width
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: Colors.white),
-                                    child: Column(
-                                      children: [
-                                        RepeatedListTile(
-                                          title: 'Edit Profile',
-                                          onpressed: () {},
-                                          icon: Icons.edit,
-                                        ),
-                                        const YellowDivider(),
-                                        RepeatedListTile(
-                                            title: 'Change Password',
-                                            onpressed: () {},
-                                            icon: Icons.lock_open_rounded),
-                                        const YellowDivider(),
-                                        RepeatedListTile(
-                                            title: 'Log out',
-                                            onpressed: () async {
-                                              await GoogleSignIn().signOut();
-                                              FirebaseAuth.instance.signOut();
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          LoginOrRegister()));
-                                            },
-                                            icon: Icons.logout_rounded)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    ProfileInfoItem(
+                      icon: Icons.phone,
+                      label: 'Phone',
+                      value:
+                          data['phone'] != '' ? data['phone'] : 'Not provided',
+                    ),
+                    ProfileInfoItem(
+                      icon: Icons.location_on,
+                      label: 'Location',
+                      value: data['address'] != ''
+                          ? data['address']
+                          : 'Not provided',
                     ),
                   ],
                 ),
-              ]),
-            );
-          }
-          return Center(child: const CircularProgressIndicator(color: Color(0xff252525),));
-        });
+                SizedBox(height: 24),
+                ProfileSection(
+                  title: 'Settings',
+                  children: [
+                    ProfileSettingsItem(
+                      icon: Icons.lock,
+                      label: 'Change Password',
+                      onTap: () {
+                        // Implement password change logic
+                      },
+                    ),
+                    ProfileSettingsItem(
+                      icon: Icons.logout,
+                      label: 'Log Out',
+                      onTap: () async {
+                        await GoogleSignIn().signOut();
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginOrRegister(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
-class ProfileHeaderLabel extends StatelessWidget {
-  final String label;
-  const ProfileHeaderLabel({
-    required this.label,
-    super.key,
+class ProfileSection extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  ProfileSection({
+    required this.title,
+    required this.children,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      width: MediaQuery.of(context).size.width * .9,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            width: 50,
-            child: Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          ),
           Text(
-            label,
-            style: const TextStyle(fontSize: 20, color: Colors.grey),
-          ),
-          const SizedBox(
-            width: 50,
-            child: Divider(
-              thickness: 1,
-              color: Colors.grey,
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          SizedBox(height: 16),
+          ...children,
         ],
       ),
     );
   }
 }
 
-class RepeatedListTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
+class ProfileInfoItem extends StatelessWidget {
   final IconData icon;
-  final Function()? onpressed;
+  final String label;
+  final String value;
 
-  const RepeatedListTile(
-      {super.key,
-      required this.title,
-      this.subtitle = '',
-      required this.icon,
-      this.onpressed});
+  ProfileInfoItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onpressed,
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(subtitle),
-        leading: Icon(icon),
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: Color(0xff252525), // Icon color
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: Color(0xff252525), // Label color
+        ),
+      ),
+      subtitle: Text(
+        value,
+        style: TextStyle(
+          color: Colors.grey, // Value color
+        ),
       ),
     );
   }
 }
 
-class YellowDivider extends StatelessWidget {
-  const YellowDivider({
-    super.key,
+class ProfileSettingsItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  ProfileSettingsItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: Divider(
-        thickness: 1,
-        color: Colors.black54,
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: Color(0xff252525), // Icon color
       ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: Color(0xff252525), // Label color
+        ),
+      ),
+      onTap: onTap,
     );
   }
 }

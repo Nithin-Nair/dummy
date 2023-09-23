@@ -29,6 +29,7 @@ class _FoodStoreOwnerState extends State<FoodStoreOwner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffe6ebec),
       // appBar: AppBar(title:Text(widget.fsname),centerTitle: true,),
       bottomNavigationBar: ClipRRect(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight:Radius.circular(20)),
         child: BottomNavigationBar(backgroundColor: Color(0xFF252525),
