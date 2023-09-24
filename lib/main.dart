@@ -10,6 +10,30 @@ import 'package:provider/provider.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // List<Map<String, dynamic>> cellData = [
+  //   {
+  //     'cellContact': '123456789',
+  //     'cellDescription': 'xyz',
+  //     'cellName': 'EDC',
+  //     'cellImage': 'https://firebasestorage.googleapis.com/v0/b/dummy-proj-221a5.appspot.com/o/foodStores%2Fcr%40gmail.com%2Fcr.jpg?alt=media&token=e88fd78d-a80a-43f7-a8e5-742bdb431e25',
+  //     'cellLocation': 'BBA Building',
+  //     'cellWebsite': 'https://edc.paruluniversity.ac.in/',
+  //     // Replace with the desired user_id
+  //   },
+  //
+  //
+  //   // Add more user data as needed
+  // ];
+  //
+  // // Add each user data as a document with user_id as the document name
+  // for (var cellData in cellData) {// Get the user_id
+  //   await firestore.collection('Cell').doc().set(cellData);
+  // }
+  //
+  // print('Documents added to Firestore with user_id as document name successfully.');
+
+
   runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_)=>Cart())]
   ,child: const MyApp()));

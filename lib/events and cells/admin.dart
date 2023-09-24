@@ -132,7 +132,7 @@ class _CellAdminState extends State<CellAdmin> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Center(
-          child: Text('CellAdmin'),
+          child: Text('Event Admin'),
         ),
       ),
       body: SingleChildScrollView(

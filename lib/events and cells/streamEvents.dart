@@ -106,7 +106,7 @@ class _StreamEventState extends State<StreamEvent> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    width: 135,
+                    width: 129,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +127,6 @@ class _StreamEventState extends State<StreamEvent> {
                             SizedBox(width: 10),
                             Text(
                               cell,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -140,7 +139,6 @@ class _StreamEventState extends State<StreamEvent> {
                             SizedBox(width: 10),
                             Text(
                               location,
-                                overflow: TextOverflow.ellipsis
                             ),
                           ],
                         ),
