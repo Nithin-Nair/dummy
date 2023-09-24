@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Login/Authpage.dart';
 import 'package:dummy/Login/userManagement.dart';
+import 'package:dummy/events%20and%20cells/showCell.dart';
 import 'package:dummy/next_page.dart';
 import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../events and cells/Cell_Admin.dart';
 import '../events and cells/eventAndCellAdmin.dart';
 import '../foodStores/food Store owners pages/foodStoreOwnerNavBar.dart';
 import 'authorize.dart';
@@ -44,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       User? user=FirebaseAuth.instance.currentUser;
       if( user != null){
         FirebaseFirestore.instance.collection('users').where('email',isEqualTo: user.email).get().then((docs) async {
-          if (docs.docs[0].exists && docs.docs[0].data()['role']=='cellAdmin') {
+          if (docs.docs[0].exists && docs.docs[0].data()['role']=='eventAdmin') {
             var fsname=docs.docs[0].data()['name'];
             // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
             // sharedPreferences.setString('role', docs.docs[0].data()['role']);
@@ -55,6 +57,12 @@ class _LoginPageState extends State<LoginPage> {
             // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
             // sharedPreferences.setString('role', docs.docs[0].data()['role']);
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>FoodStoreOwner(fsname: fsname,)));
+          }
+          else if(docs.docs[0].exists && docs.docs[0].data()['role']=='cellAdmin') {
+            var fsname=docs.docs[0].data()['name'];
+            // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+            // sharedPreferences.setString('role', docs.docs[0].data()['role']);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>sell()));
           }
 
           else if(docs.docs[0].exists && docs.docs[0].data()['role']=='user') {
