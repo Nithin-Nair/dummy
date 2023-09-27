@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../Login/login_or_register.dart';
 import '../foodStores/orderScreen.dart';
@@ -13,6 +17,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Map<String, dynamic> data = {};
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
@@ -32,12 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Center(child: Text("Document doesn't exist."));
         }
 
-        final data = snapshot.data!.data() as Map<String, dynamic>;
+        data = snapshot.data!.data() as Map<String, dynamic>;
 
         return Scaffold(
           backgroundColor: Color(0xFFf2f2f2),
           appBar: AppBar(
-              centerTitle: true,
+            centerTitle: true,
             backgroundColor: Color(0xff252525),
             title: Text(
               'My Profile',
@@ -53,10 +59,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 80,
-                  backgroundImage:
-                      CachedNetworkImageProvider(data['profile_image']),
+                GestureDetector(
+                  onTap: () {
+                    _uploadProfilePicture();
+                  },
+                  child: CircleAvatar(
+                    radius: 80,
+                    backgroundImage:
+                    CachedNetworkImageProvider(data['profile_image']),
+                  ),
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -125,15 +136,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ProfileInfoItem(
                       icon: Icons.phone,
                       label: 'Phone',
-                      value:
-                          data['phone'] != '' ? data['phone'] : 'Not provided',
+                      value: data['phone'] != '' ? data['phone'] : 'Not provided',
                     ),
                     ProfileInfoItem(
                       icon: Icons.location_on,
                       label: 'Location',
-                      value: data['address'] != ''
-                          ? data['address']
-                          : 'Not provided',
+                      value: data['address'] != '' ? data['address'] : 'Not provided',
                     ),
                   ],
                 ),
@@ -170,6 +178,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  Future<void> _uploadProfilePicture() async {
+    final imagePicker = ImagePicker();
+    final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final imageUrl = await _uploadImageToFirebaseStorage(File(pickedFile.path));
+
+      if (imageUrl != null) {
+        setState(() {
+          data['profile_image'] = imageUrl;
+        });
+
+        // Update the user's profile picture in Firebase Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({'profile_image': imageUrl});
+      }
+    }
+  }
+
+  Future<String?> _uploadImageToFirebaseStorage(File file) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child('profile_images');
+      final uploadTask = storageRef.putFile(file);
+      final TaskSnapshot storageTaskSnapshot = await uploadTask;
+      final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+
+      return imageUrl;
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+      return null;
+    }
   }
 }
 
