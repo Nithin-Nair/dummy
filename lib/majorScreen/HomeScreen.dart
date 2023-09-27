@@ -1,12 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dummy/majorScreen/eventsAndCells.dart';
-import 'package:dummy/majorScreen/foodOrder.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import '../Login/login_or_register.dart';
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+
+}
 class Event {
   final String imageUrl;
   final String eventName;
@@ -22,16 +26,36 @@ class FoodStore {
 
   FoodStore(this.imageUrl, this.storeName, this.location);
 }
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class _HomeScreenState extends State<HomeScreen> {
+  late User? user; // To store the current user
+  String? profileImageUrl;
+  String? profileName;
 
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  void initState() {
+    super.initState();
+    // Fetch the current user from Firebase Authentication
+    user = FirebaseAuth.instance.currentUser;
 
-class _HomeScreenState extends State<HomeScreen> {
+    if (user != null) {
+      // Fetch user data from Firestore
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get()
+          .then((DocumentSnapshot<Map<String, dynamic>> snapshot) {
+        if (snapshot.exists) {
+          final userData = snapshot.data();
+          setState(() {
+            profileImageUrl = userData?['profile_image'];
+            profileName = userData?['name'];
+          });
+        }
+      });
+    }
+  }
+
   final List<Event> events = [
     Event(
       'assets/edm.jpg',
@@ -82,32 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-        automaticallyImplyLeading: false,
-        title: FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('users')
-                .doc(FirebaseAuth.instance.currentUser!.uid!)
-                .get(),
-            builder: (context, snapshot) {
-              var uname=snapshot.data!['name'];
-              return Text('Welcome ' + uname);
-
-            }),
-        backgroundColor: const Color(0xFF252525),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-        ),
-      ),
       body: Container(
         color: Color(0xFFE6EBEC),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+            padding:
+            const EdgeInsets.only(top: 60.0, left: 16.0),
+            // const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -116,45 +121,84 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        // CircleAvatar(
-                        //   radius: 30,
-                        //   backgroundImage:
-                        //   AssetImage('assets/profile_picture.png'),
-                        // ),
-                        // SizedBox(width: 10),
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                          CachedNetworkImageProvider(profileImageUrl ?? ''),
+                        ),
+                        SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            // Text(
-                            //   'Welcome Back! 👋',
-                            //   style: TextStyle(
-                            //     fontFamily: 'Amethysta',
-                            //     fontSize: 21,
-                            //     fontWeight: FontWeight.bold,
-                            //     color: Color(
-                            //         0xFF7D7979), // #7D7979 color for text
-                            //   ),
-                            // ),
-                            // Text(
-                            //   'Soni Piyush',
-                            //   style: TextStyle(
-                            //     fontFamily: 'Amethysta',
-                            //     fontSize: 18,
-                            //   ),
-                            // ),
+                            Text(
+                              'Welcome Back! 👋',
+                              style: TextStyle(
+                                fontFamily: 'Amethysta',
+                                fontSize: 21,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF7D7979),
+                              ),
+                            ),
+                            Text(
+                              profileName ?? '',
+                              style: TextStyle(
+                                fontFamily: 'Amethysta',
+                                fontSize: 18,
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(right: 16.0),
-                    //   child: CircleAvatar(
-                    //     radius: 25,
-                    //     backgroundColor: Color.fromRGBO(255, 255, 255, 0.60),
-                    //     backgroundImage: AssetImage('assets/img_1.png'),
-                    //   ),
-                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Color.fromRGBO(255, 255, 255, 0.60),
+                        backgroundImage: AssetImage('assets/img_1.png'),
+                      ),
+                    ),
                   ],
+                ),
+                SizedBox(height: 20), // Add some vertical spacing
+                Padding(
+                  padding: const EdgeInsets.only(
+                      right: 16.0), // Right padding for search bar
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300], // Gray background color
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        border: InputBorder.none,
+                        // Add a clear button to the search bar
+                        // Add a search icon or button to the search bar
+                        prefixIcon: IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () {
+                            // Perform the search here
+                          },
+                        ),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            // Perform the action for img_2.png icon here
+                          },
+                          child: Image.asset(
+                            'assets/img_2.png',
+                            width: 10,
+                            height: 10,
+                          ),
+                        ),
+                      ),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 20), // Add some vertical spacing
                 Padding(
@@ -196,21 +240,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       // List of carousel items
                       Container(
                         child: Image.asset(
-                          'assets/images/home/img_5.png',
+                          'assets/img_5.png',
                           width: 400,
                           height: 200,
                         ),
                       ),
                       Container(
                         child: Image.asset(
-                          'assets/images/home/img_5.png',
+                          'assets/img_5.png',
                           width: 400,
                           height: 200,
                         ),
                       ),
                       Container(
                         child: Image.asset(
-                          'assets/images/home/img_5.png',
+                          'assets/img_5.png',
                           width: 400,
                           height: 200,
                         ),
@@ -236,16 +280,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 16.0),
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>EventAndCells()));
-                          },
-                          child: Text(
-                            'View More',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
+                        child: Text(
+                          'View More',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
@@ -289,16 +328,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 16.0),
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>FoodOrder()));
-                          },
-                          child: Text(
-                            'View More',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
+                        child: Text(
+                          'View More',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
@@ -331,22 +365,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-
-
-
-
 }
 
 class EventCard extends StatelessWidget {
   final String imageUrl;
   final String eventName;
   final String location;
-
   EventCard(
       {required this.imageUrl,
-        required this.eventName,
-        required this.location});
+      required this.eventName,
+      required this.location});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -414,6 +442,7 @@ class EventCard extends StatelessWidget {
     );
   }
 }
+
 class FoodStoreCard extends StatelessWidget {
   final String imageUrl;
   final String storeName;
@@ -421,8 +450,8 @@ class FoodStoreCard extends StatelessWidget {
 
   FoodStoreCard(
       {required this.imageUrl,
-        required this.storeName,
-        required this.location});
+      required this.storeName,
+      required this.location});
 
   @override
   Widget build(BuildContext context) {
