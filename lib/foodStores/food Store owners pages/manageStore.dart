@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'EditItem.dart'; // Renamed import to EditStore
+import 'EditItem.dart';
 
 class ManageStore extends StatefulWidget {
-  const ManageStore({Key? key}) : super(key: key);
+  const ManageStore({super.key});
 
   @override
   State<ManageStore> createState() => _ManageStoreState();
@@ -26,7 +25,6 @@ class _ManageStoreState extends State<ManageStore> {
       .collection('foodItems')
       .where('store_id', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
       .snapshots();
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
