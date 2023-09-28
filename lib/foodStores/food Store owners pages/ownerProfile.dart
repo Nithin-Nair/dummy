@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../Login/login_or_register.dart';
+import '../../majorScreen/ResetPassword.dart';
 import 'editOwnerProfile.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
@@ -122,7 +123,12 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                       icon: Icons.lock,
                       label: 'Change Password',
                       onTap: () {
-                        // Implement password change logic
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResetPassword(),
+                          ),
+                        );
                       },
                     ),
                     ProfileSettingsItem(
