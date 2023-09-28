@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'ResetPassword.dart';
+import 'editUserProfile';
 import '../Login/login_or_register.dart';
 import '../foodStores/orderScreen.dart';
 
@@ -53,6 +54,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.edit, // You can use any icon you prefer for editing
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  // Navigate to the edit profile screen
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EditUserProfile(), // Replace with your EditOwnerProfile class
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(16),
@@ -60,9 +77,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    _uploadProfilePicture();
-                  },
                   child: CircleAvatar(
                     radius: 80,
                     backgroundImage:
@@ -153,7 +167,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.lock,
                       label: 'Change Password',
                       onTap: () {
-                        // Implement password change logic
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResetPassword(),
+                          ),
+                        );
                       },
                     ),
                     ProfileSettingsItem(
