@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../../Login/login_or_register.dart';
+import 'editOwnerProfile.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   @override
@@ -46,11 +46,28 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.edit, // You can use any icon you prefer for editing
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  // Navigate to the edit profile screen
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EditOwnerProfile(), // Replace with your EditOwnerProfile class
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+
               children: [
                 CircleAvatar(
                   radius: 80,
