@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -55,7 +56,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       },
     );
   }
-
+late Future<String?> userToken=FirebaseMessaging.instance.getToken();
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   @override
@@ -165,7 +166,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             .collection('foodStores')
                             .where('user_id', isEqualTo: item.storeId)
                             .get();
-
+                        final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+                        final String? fcmToken = await _firebaseMessaging.getToken();
                         String storeName = ''; // Initialize with an empty string
 
                         if (storeQuery.docs.isNotEmpty) {
@@ -189,6 +191,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           'order_complete_time': '',
                           'order_status': 'Preparing',
                           'order_time': DateTime.now(),
+                          'userToken':fcmToken
                         });
                       }
                       _showOrderCompletionDialog();

@@ -1,8 +1,41 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<void> sendNotification(String userFCMToken, itemName, storeName) async {
+  // print(userFCMToken);
+  var data = {
+    'notification': {
+      'title': 'Your Order for ${itemName} is ready for pickup!!!',
+      'body': 'Collect it now from ${storeName}!!',
+    },
+    'priority': 'high',
+    'to': userFCMToken,
+  };
+
+  final headers = <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'key=AAAA4kVJVfg:APA91bE_Hsf_ZgOnbNgWy18M7rFxdCiv3PaLld7CH9P3IYjoli-w2WDG5Vcf0UUUIpx1xSXgrTJFUjbiGRARO8Qg-csWue1SfJfJ45y9SNH4K0GCtGCqhhpIN5dScYJVUJRc57o16wwC',
+  };
+
+  final response = await http.post(
+    Uri.parse('https://fcm.googleapis.com/fcm/send'),
+    headers: headers,
+    body: jsonEncode(data),
+  );
+
+  if (response.statusCode == 200) {
+    print('Notification sent successfully');
+  } else {
+    print('Failed to send notification. Status code: ${response.statusCode}');
+  }
+}
+
 
 class Orders extends StatefulWidget {
   const Orders({Key? key}) : super(key: key);
@@ -10,6 +43,10 @@ class Orders extends StatefulWidget {
   @override
   State<Orders> createState() => _OrdersState();
 }
+final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+
+
 
 class _OrdersState extends State<Orders> {
   @override
@@ -109,7 +146,8 @@ class OrderItemWidget extends StatelessWidget {
     final custName = orderData['cust_name'];
     final orderId = orderData['order_id'];
     final orderStatus = orderData['order_status'];
-
+    final userFCMToken = orderData['userToken'];
+    final storeName=orderData['store_name'];
     DateTime orderDateTime = orderTime.toDate();
     String formattedOrderTime = DateFormat('MMMM dd, yyyy h:mm a').format(orderDateTime);
 
@@ -183,7 +221,9 @@ class OrderItemWidget extends StatelessWidget {
                       Center(
                         child: TextButton(
                           onPressed: () async {
+
                             await FirebaseFirestore.instance.collection('orders').doc(orderId).update({'order_status': 'Ready for pickup'});
+                            await sendNotification(userFCMToken,itemName,storeName);
                           },
                           child: const Text('Change status to Ready for pickup?'),
                         ),
