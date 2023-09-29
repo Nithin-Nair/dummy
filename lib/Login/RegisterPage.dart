@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fbs;
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,8 +26,10 @@ class _RegisterPageState extends State<RegisterPage> {
   late String address='';
   late String role = 'user';
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
   void signUserUp() async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     showDialog(
         context: GlobalContextService.navigatorKey.currentContext!,
         builder: (context) {
@@ -40,14 +43,17 @@ class _RegisterPageState extends State<RegisterPage> {
         fbs.FirebaseStorage.instance.ref('users_profile_images/$email.jpg');
     await ref.putFile(File(imageFile!.path));
     profileImage = await ref.getDownloadURL();
-    await users.doc(FirebaseAuth.instance.currentUser!.uid).set({
+    final String userID=FirebaseAuth.instance.currentUser!.uid;
+    final String? fcmToken = await _firebaseMessaging.getToken();
+    await users.doc(userID).set({
       'name': name,
       'email': email,
       'profile_image': profileImage,
       'phone': phone,
       'address': address,
       'user_id': FirebaseAuth.instance.currentUser!.uid,
-      'role':role
+      'role':role,
+      'userToken':fcmToken
     });
     // Future addUserDetails(String name, String email) async {
     //   final docUser = FirebaseFirestore.instance.collection('users').doc(email);
@@ -65,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
     Navigator.pop(GlobalContextService.navigatorKey.currentContext!);
 
     Navigator.pushReplacement(GlobalContextService.navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => LoginOrRegister()));
+        MaterialPageRoute(builder: (context) => const LoginOrRegister()));
   }
 
   XFile? imageFile;
@@ -253,16 +259,3 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-class User {
-  String id;
-  String name;
-  String email;
-  String role = 'user';
-  User(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required String role});
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'name': name, 'email': email, 'role': role};
-}
