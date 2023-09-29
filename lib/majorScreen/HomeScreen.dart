@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Trending this week',
+                        'Trending this month',
                         style: TextStyle(
                           fontFamily: 'Amethysta',
                           fontSize: 18,
@@ -240,21 +240,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       // List of carousel items
                       Container(
                         child: Image.asset(
-                          'assets/img_5.png',
+                          'assets/ganesha.png',
                           width: 400,
                           height: 200,
                         ),
                       ),
                       Container(
                         child: Image.asset(
-                          'assets/img_5.png',
+                          'assets/img_6.png',
                           width: 400,
                           height: 200,
                         ),
                       ),
                       Container(
                         child: Image.asset(
-                          'assets/img_5.png',
+                          'assets/img_7.png',
                           width: 400,
                           height: 200,
                         ),
@@ -373,8 +373,8 @@ class EventCard extends StatelessWidget {
   final String location;
   EventCard(
       {required this.imageUrl,
-      required this.eventName,
-      required this.location});
+        required this.eventName,
+        required this.location});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -450,8 +450,8 @@ class FoodStoreCard extends StatelessWidget {
 
   FoodStoreCard(
       {required this.imageUrl,
-      required this.storeName,
-      required this.location});
+        required this.storeName,
+        required this.location});
 
   @override
   Widget build(BuildContext context) {
