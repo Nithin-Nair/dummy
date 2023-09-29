@@ -196,7 +196,7 @@ class _CartScreenState extends State<CartScreen> {
               setState(() {
                 _isExpanded = !_isExpanded;
                 if(_isExpanded){
-                  expandableHeight=304;
+                  expandableHeight=320;
                 }
                 else{expandableHeight=75;}
               });
@@ -282,7 +282,7 @@ class _CartScreenState extends State<CartScreen> {
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>PaymentScreen(totalPrice: Provider.of<Cart>(context).totalAmount * 1.07,)));
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      primary: Colors.green,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -306,6 +306,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+
 }
 
 class AppBarTitle extends StatelessWidget {
