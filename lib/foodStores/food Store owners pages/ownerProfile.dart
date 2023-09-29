@@ -84,9 +84,14 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 80,
-                  backgroundImage: NetworkImage(profileImage),
+                CachedNetworkImage( // Change this line
+                  imageUrl: profileImage, // Change this line
+                  placeholder: (context, url) => CircularProgressIndicator(), // Optional: Add a placeholder while loading
+                  errorWidget: (context, url, error) => Icon(Icons.error), // Optional: Display an error widget when the image fails to load
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    radius: 80,
+                    backgroundImage: imageProvider,
+                  ),
                 ),
                 SizedBox(height: 16),
                 Text(
