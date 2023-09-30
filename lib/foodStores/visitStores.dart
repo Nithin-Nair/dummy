@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/foodStores/cart.dart';
@@ -126,12 +127,14 @@ class _VisitStoreState extends State<VisitStore> {
           },
           icon: Consumer<Cart>(
             builder: (context, cart, child) {
-              return Badge(
-                isLabelVisible:
-                cart.getItems.isEmpty ? false : true,
-                label: Text(cart.getItems.length.toString()),
-                child: Icon(Icons.shopping_cart),
-              );
+                return Badge(
+                  badgeContent: Text(
+                    cart.getItems.length.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Icon(Icons.shopping_cart),
+                );
+
             },
           ),
         ),

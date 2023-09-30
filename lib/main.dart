@@ -1,9 +1,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Login/Authpage.dart';
+import 'package:dummy/events%20and%20cells/Cell_Admin.dart';
+import 'package:dummy/events%20and%20cells/showCell.dart';
+import 'package:dummy/events%20and%20cells/streamEvents.dart';
 import 'package:dummy/foodStores/providers/cart_provider.dart';
+import 'package:dummy/majorScreen/HomeScreen.dart';
+import 'package:dummy/majorScreen/eventsAndCells.dart';
+import 'package:dummy/majorScreen/profile.dart';
 import 'package:dummy/minor%20screens/splash.dart';
 import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
+import 'package:dummy/minor%20screens/whichRoleHomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: GlobalContextService.navigatorKey,
-      home:const Splash(),
+      home: const Splash(),
     );
   }
 }

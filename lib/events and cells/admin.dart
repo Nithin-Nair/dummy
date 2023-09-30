@@ -21,7 +21,7 @@ class _CellAdminState extends State<CellAdmin> {
   final locationController = TextEditingController();
   late String cell;
   final descriptionController = TextEditingController();
-  final priceController = TextEditingController();
+  final google_link_Controller = TextEditingController();
   late String eventImage;
   File? _image;
   final ImagePicker _imagePicker = ImagePicker();
@@ -130,6 +130,7 @@ class _CellAdminState extends State<CellAdmin> {
     return Scaffold(
       backgroundColor: Color(0xffe6ebec),
       appBar: AppBar(
+        backgroundColor: Color(0xff252525),
         automaticallyImplyLeading: false,
         title: Center(
           child: Text('Event Admin'),
@@ -481,18 +482,18 @@ class _CellAdminState extends State<CellAdmin> {
                       child: Column(
                         children: [
                           TextField(
-                            controller: priceController,
+                            controller: google_link_Controller,
                             onChanged: (value) {
                               // Do something with the value, if needed
                             },
                             decoration: InputDecoration(
-                              hintText: 'Price',
+                              hintText: 'Link for google form',
                               hintStyle: TextStyle(
                                 fontSize: 20,
                               ),
                               icon: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Icon(Icons.currency_rupee_sharp),
+                                child: Icon(Icons.link),
                               ),
                             ),
                           ),
@@ -526,7 +527,7 @@ class _CellAdminState extends State<CellAdmin> {
                         'eventStartTime': startTimeController.text.trim(),
                         'eventEndTime': endTimeController.text.trim(),
                         'eventDescription': descriptionController.text.trim(),
-                        'eventPrice': priceController.text.trim(),
+                        'eventFormLink': google_link_Controller.text.trim(),
                         'eventImage' : eventImage,
                       };
 
@@ -545,7 +546,7 @@ class _CellAdminState extends State<CellAdmin> {
                     width: MediaQuery.of(context).size.width * .8,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: Colors.lightBlueAccent,
+                      color: Color(0xff252525),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),

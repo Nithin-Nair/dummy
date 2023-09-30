@@ -1,11 +1,14 @@
 import 'package:dummy/events%20and%20cells/admin.dart';
 import 'package:dummy/events%20and%20cells/streamEvents.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
+import '../Login/login_or_register.dart';
 import 'Description.dart';
 
 
@@ -76,11 +79,26 @@ class _AdminState extends State<Admin> {
       backgroundColor: Color(0xffe6ebec),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
         elevation: 0,
         title: Center(
           child: Text('Event'),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async{
+              await GoogleSignIn().signOut();
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginOrRegister(),
+                ),
+              );
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: StreamEvent(),
       floatingActionButton: FloatingActionButton(
@@ -88,7 +106,7 @@ class _AdminState extends State<Admin> {
           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CellAdmin()));
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 class MyDescription extends StatefulWidget {
   final String name;
   final String eimage;
@@ -179,11 +180,20 @@ class _MyDescriptionState extends State<MyDescription> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Placeholder()));
+                      // Replace 'your_google_form_link_here' with your actual Google Form link
+                      String googleFormLink = 'https://docs.google.com/forms/d/e/1FAIpQLSeaDn2jZrGYGJj3WFW_wTSqB0mdHTWExMrSOT3DjjXiIRfxbw/viewform?usp=sf_link';
+
+                      launch(googleFormLink).then((result) {
+                        if (result != null) {
+                          print('Google Form opened successfully');
+                        } else {
+                          print('Could not open Google Form');
+                        }
+                      });
                     },
                     child: Container(
                       height: 45,
-                      width: MediaQuery.of(context).size.width*.8,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         color: Colors.lightBlueAccent,
@@ -194,8 +204,8 @@ class _MyDescriptionState extends State<MyDescription> {
                           'Register',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white
+                            fontSize: 18,
+                            color: Colors.white,
                           ),
                         ),
                       ),

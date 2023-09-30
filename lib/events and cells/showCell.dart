@@ -1,3 +1,4 @@
+import 'package:dummy/majorScreen/eventsAndCells.dart';
 import 'package:flutter/material.dart';
 import 'Cell_Admin.dart';
 import 'Description2.dart';
@@ -17,7 +18,7 @@ class _sellState extends State<sell> {
       backgroundColor: Color(0xffe6ebec),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
         elevation: 0,
         title: Center(
           child: Text('Cell'),
@@ -26,10 +27,10 @@ class _sellState extends State<sell> {
       body: StreamCell(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Cells_admin()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EventAndCells()));
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
       ),
     );
   }

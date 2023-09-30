@@ -1,6 +1,7 @@
 import 'package:dummy/minor%20screens/searchbar.dart';
 import 'package:flutter/material.dart';
 
+import '../events and cells/SearchCells.dart';
 import '../events and cells/description.dart';
 import '../events and cells/streamCells.dart';
 import '../events and cells/streamEvents.dart';
@@ -20,8 +21,8 @@ class _EventAndCellsState extends State<EventAndCells> {
       child: Scaffold(
         backgroundColor: Color(0xffe6ebec),
         appBar: AppBar(
-          backgroundColor: Colors.deepPurple,
-          title: Text('PUCollegiFY'),
+          backgroundColor: Color(0xff252525),
+          title: SearchBar(),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Events'), // First tab label
