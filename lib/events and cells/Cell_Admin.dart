@@ -6,7 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fbs;
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../Login/login_or_register.dart';
 
 class Cells_admin extends StatefulWidget {
   const Cells_admin({super.key});
@@ -67,10 +70,26 @@ class _Cells_adminState extends State<Cells_admin> {
     return Scaffold(
       backgroundColor: Color(0xffe6ebec),
       appBar: AppBar(
+        backgroundColor: Color(0xff252525),
         automaticallyImplyLeading: false,
         title: Center(
           child: Text('Cell Admin'),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async{
+              await GoogleSignIn().signOut();
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginOrRegister(),
+                ),
+              );
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

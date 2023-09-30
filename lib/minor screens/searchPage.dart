@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/foodStores/food%20Store%20owners%20pages/streamFoodStores.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import '';
 import '../foodStores/visitStores.dart'; // Import the VisitStore widget
 
 class SearchPage extends StatefulWidget {
