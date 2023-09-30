@@ -149,17 +149,17 @@ class CellWidget extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.location_city,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                e['cellWebsite'],
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Icon(
+                          //       Icons.location_city,
+                          //     ),
+                          //     SizedBox(width: 10),
+                          //     // Text(
+                          //     //   e['cellWebsite'],
+                          //     // ),
+                          //   ],
+                          // ),
                           SizedBox(height: 10),
                           Row(
                             children: [
