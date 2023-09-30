@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Login/Authpage.dart';
 import 'package:dummy/Login/userManagement.dart';
 import 'package:dummy/events%20and%20cells/showCell.dart';
-import 'package:dummy/next_page.dart';
+import 'package:dummy/Unused%20Files/next_page.dart';
 import 'package:dummy/minor%20screens/userHomescreenBottomNavBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

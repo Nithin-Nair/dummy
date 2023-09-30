@@ -113,8 +113,11 @@ class _StreamEventState extends State<StreamEvent> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              ename,
+                            Flexible(
+                              child: Text(
+                                ename,maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -125,8 +128,11 @@ class _StreamEventState extends State<StreamEvent> {
                               Icons.location_city,
                             ),
                             SizedBox(width: 10),
-                            Text(
-                              cell,
+                            Flexible(
+                              child: Text(
+                                cell,maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -137,8 +143,11 @@ class _StreamEventState extends State<StreamEvent> {
                               Icons.location_on,
                             ),
                             SizedBox(width: 10),
-                            Text(
-                              location,
+                            Flexible(
+                              child: Text(
+                                location,maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -147,6 +156,7 @@ class _StreamEventState extends State<StreamEvent> {
                   ),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
                       width: 41,
@@ -164,6 +174,7 @@ class _StreamEventState extends State<StreamEvent> {
                           Text(
                             day.toString(),
                             style: TextStyle(fontWeight: FontWeight.bold),
+
                           ),
                           SizedBox(height: 10),
                           Text(monthString),

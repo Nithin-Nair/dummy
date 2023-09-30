@@ -107,8 +107,10 @@ class _StreamCellState extends State<StreamCell> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              cname,
+                            Flexible(
+                              child: Text(
+                                cname,maxLines: 1,overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -119,8 +121,11 @@ class _StreamCellState extends State<StreamCell> {
                               Icons.location_on,
                             ),
                             SizedBox(width: 10),
-                            Text(
-                              location,
+                            Flexible(
+                              child: Text(
+                                location,
+                                maxLines: 1,overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),

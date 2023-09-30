@@ -1,11 +1,11 @@
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fbs;
 import 'package:image_picker/image_picker.dart';
-
+import 'package:http/http.dart' as http;
 import 'eventAndCellAdmin.dart';
 
 
@@ -43,6 +43,33 @@ class _CellAdminState extends State<CellAdmin> {
     dateController = TextEditingController(
       text: _selectedDate.toLocal().toString().split(' ')[0],
     );
+  }
+  Future<void> sendNotificationToTopic(String topic, String title, String body) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'key=AAAA4kVJVfg:APA91bE_Hsf_ZgOnbNgWy18M7rFxdCiv3PaLld7CH9P3IYjoli-w2WDG5Vcf0UUUIpx1xSXgrTJFUjbiGRARO8Qg-csWue1SfJfJ45y9SNH4K0GCtGCqhhpIN5dScYJVUJRc57o16wwC', // Your FCM server key
+    };
+
+    final data = {
+      'notification': {
+        'title': title,
+        'body': body,
+      },
+      'priority': 'high',
+      'to': '/topics/$topic', // Send to the specified topic
+    };
+
+    final response = await http.post(
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      headers: headers,
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      print('Notification sent successfully to topic: $topic');
+    } else {
+      print('Failed to send notification. Status code: ${response.statusCode}');
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -512,6 +539,7 @@ class _CellAdminState extends State<CellAdmin> {
               children: [
                 InkWell(
                   onTap: () async {
+
                     bool confirmed = await _confirmPostEvent(context);
                     if (confirmed) {
                       fbs.Reference ref =
@@ -535,6 +563,7 @@ class _CellAdminState extends State<CellAdmin> {
                           .collection('Events')
                           .doc()
                           .set(userEventMap).whenComplete(() {
+                        sendNotificationToTopic('events','New Event Uploaded','${nameController.text.trim()} is happening at ${_selectedDate.day}-${_selectedDate.month}-${_selectedDate.year} conducted by ${cell}');
                         Navigator.pushReplacement(context, MaterialPageRoute(
                           builder: (context) => Admin(),
                         ),);

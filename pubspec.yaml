@@ -52,6 +52,9 @@ dependencies:
   intl:
   url_launcher:
   firebase_messaging:
+  flutter_local_notifications:
+  http:
+  firebase_analytics:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -88,6 +91,22 @@ flutter:
      - assets/images/food Stores/
      - assets/images/food items/
      - assets/images/home/
+     - assets/profile_picture.png
+     - assets/edm.jpg
+     - assets/d.jpg
+     - assets/sem.jpg
+     - assets/projection.jpg
+     - assets/chole.jpg
+     - assets/idli.jpg
+     - assets/shrirang.jpeg
+     - assets/waffle.jpeg
+     - assets/img.png
+     - assets/img_1.png
+     - assets/img_2.png
+     - assets/img_3.png
+     - assets/img_4.png
+     - assets/img_5.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -88,18 +88,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-                  // ListTile(
-                  //   leading: Icon(Icons.event),
-                  //   title: Text('My Events'),
-                  //   onTap: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => Placeholder(),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
+                  ListTile(
+                    leading: Icon(Icons.event),
+                    title: Text('My Events'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Placeholder(),
+                        ),
+                      );
+                    },
+                  ),
                   ListTile(
                     leading: Icon(Icons.location_on),
                     title: Text('My Locations'),

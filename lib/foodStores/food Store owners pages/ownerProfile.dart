@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../../Login/login_or_register.dart';
+import '../../majorScreen/ResetPassword.dart';
+import 'editOwnerProfile.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   @override
@@ -12,11 +13,25 @@ class OwnerProfileScreen extends StatefulWidget {
 }
 
 class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
+  Future<void> _navigateToEditProfile() async {
+    final bool result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditOwnerProfile(),
+      ),
+    );
+
+    if (result == true) {
+      // If result is true, it means the profile was edited, so reload the data
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
-          .collection('foodStores')
+          .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get(),
       builder:
@@ -32,6 +47,8 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
         }
 
         final data = snapshot.data!.data() as Map<String, dynamic>;
+        final profileImage = data['profile_image'] ??
+            'https://firebasestorage.googleapis.com/v0/b/dummy-proj-221a5.appspot.com/o/foodStores%2Fshrirang%40gmail.com%2Fsr.jpg?alt=media&token=a16908bc-c9a4-4f5d-8e77-af57d6548b32';
 
         return Scaffold(
           backgroundColor: Color(0xFFf2f2f2),
@@ -46,6 +63,21 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EditOwnerProfile(),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(16),
@@ -54,8 +86,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
               children: [
                 CircleAvatar(
                   radius: 80,
-                  backgroundImage:
-                      CachedNetworkImageProvider(data['store_image']),
+                  backgroundImage: NetworkImage(profileImage),
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -86,7 +117,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                       icon: Icons.phone,
                       label: 'Phone',
                       value:
-                          data['phone'] != '' ? data['phone'] : 'Not provided',
+                      data['phone'] != '' ? data['phone'] : 'Not provided',
                     ),
                     ProfileInfoItem(
                       icon: Icons.location_on,
@@ -105,7 +136,12 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                       icon: Icons.lock,
                       label: 'Change Password',
                       onTap: () {
-                        // Implement password change logic
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResetPassword(),
+                          ),
+                        );
                       },
                     ),
                     ProfileSettingsItem(
@@ -193,18 +229,18 @@ class ProfileInfoItem extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: Color(0xff252525), // Icon color
+        color: Color(0xff252525),
       ),
       title: Text(
         label,
         style: TextStyle(
-          color: Color(0xff252525), // Label color
+          color: Color(0xff252525),
         ),
       ),
       subtitle: Text(
         value,
         style: TextStyle(
-          color: Colors.grey, // Value color
+          color: Colors.grey,
         ),
       ),
     );
@@ -227,12 +263,12 @@ class ProfileSettingsItem extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: Color(0xff252525), // Icon color
+        color: Color(0xff252525),
       ),
       title: Text(
         label,
         style: TextStyle(
-          color: Color(0xff252525), // Label color
+          color: Color(0xff252525),
         ),
       ),
       onTap: onTap,
