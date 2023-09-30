@@ -79,7 +79,7 @@ class _AdminState extends State<Admin> {
       backgroundColor: Color(0xffe6ebec),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
         elevation: 0,
         title: Center(
           child: Text('Event'),
@@ -106,7 +106,7 @@ class _AdminState extends State<Admin> {
           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CellAdmin()));
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
       ),
     );
   }

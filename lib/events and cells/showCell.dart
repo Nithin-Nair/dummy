@@ -17,7 +17,7 @@ class _sellState extends State<sell> {
       backgroundColor: Color(0xffe6ebec),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
         elevation: 0,
         title: Center(
           child: Text('Cell'),
@@ -29,7 +29,7 @@ class _sellState extends State<sell> {
           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Cells_admin()));
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff252525),
       ),
     );
   }
