@@ -47,10 +47,20 @@ class _EditOwnerProfileState extends State<EditOwnerProfile> {
 
         if (snapshot.exists) {
           final data = snapshot.data() as Map<String, dynamic>;
-          nameController!.text = data['name'];
-          emailController!.text = data['email'];
-          phoneController!.text = data['phone'];
-          locationController!.text = data['location'];
+
+          if (data['name'] != null) {
+            nameController!.text = data['name'];
+          }
+          if (data['email'] != null) {
+            emailController!.text = data['email'];
+          }
+          if (data['phone'] != null) {
+            phoneController!.text = data['phone'];
+          }
+          if (data['location'] != null) {
+            locationController!.text = data['location'];
+          }
+
           pickedProfileImage = data['profile_image'];
         }
       }
@@ -59,13 +69,14 @@ class _EditOwnerProfileState extends State<EditOwnerProfile> {
     }
   }
 
+
   void imagePicker() async {
     try {
       final pickedImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
         maxHeight: 300,
         maxWidth: 300,
-        imageQuality: 95,
+        imageQuality: 100, // Set image quality to 100
       );
       if (pickedImage != null) {
         setState(() {
@@ -79,6 +90,7 @@ class _EditOwnerProfileState extends State<EditOwnerProfile> {
       });
     }
   }
+
 
 
   @override

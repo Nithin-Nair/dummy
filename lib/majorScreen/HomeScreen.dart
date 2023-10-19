@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'Carousel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-
 }
+
 class Event {
   final String imageUrl;
   final String eventName;
@@ -26,11 +27,11 @@ class FoodStore {
 
   FoodStore(this.imageUrl, this.storeName, this.location);
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   late User? user; // To store the current user
   String? profileImageUrl;
   String? profileName;
-
 
   @override
   void initState() {
@@ -110,8 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Color(0xFFE6EBEC),
         child: SingleChildScrollView(
           child: Padding(
-            padding:
-            const EdgeInsets.only(top: 60.0, left: 16.0),
+            padding: const EdgeInsets.only(top: 60.0, left: 16.0),
             // const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         CircleAvatar(
                           radius: 30,
                           backgroundImage:
-                          CachedNetworkImageProvider(profileImageUrl ?? ''),
+                              CachedNetworkImageProvider(profileImageUrl ?? ''),
                         ),
                         SizedBox(width: 10),
                         Column(
@@ -202,8 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 20), // Add some vertical spacing
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 8.0), // Add bottom padding
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0), // Add bottom padding
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -220,13 +220,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 0.0,right: 0),
+                  padding: const EdgeInsets.only(bottom: 0.0, right: 0),
                   child: CarouselSlider(
                     options: CarouselOptions(
                       height: 175, // Height of the carousel item
                       autoPlay: true, // Enable auto-scrolling
                       enlargeCenterPage:
-                      true, // Display one carousel item at a time
+                          true, // Display one carousel item at a time
                       aspectRatio: 1.0, // Aspect ratio of the carousel item
                       autoPlayCurve: Curves
                           .fastOutSlowIn, // Animation curve for auto-scrolling
@@ -234,16 +234,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           seconds: 5), // Time interval for auto-scrolling
                       autoPlayAnimationDuration: Duration(
                           milliseconds:
-                          800), // Animation duration for auto-scrolling
+                              800), // Animation duration for auto-scrolling
                     ),
                     items: [
                       // List of carousel items
-                      Container(
-                        child: Image.asset(
-                          'assets/ganesha.png',
-                          width: 400,
-                          height: 200,
+                      GestureDetector(
+                        child: Container(
+                          child: Image.asset(
+                            'assets/ganesha.png',
+                            width: 400,
+                            height: 200,
+                          ),
                         ),
+                        onTap: () {
+                          // Navigate to Carousel.dart screen
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => Carousel()));
+                        },
                       ),
                       Container(
                         child: Image.asset(
@@ -264,8 +270,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 8.0), // Add bottom padding
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0), // Add bottom padding
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -312,8 +318,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 20), // Add some vertical spacing
                 Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 8.0), // Add bottom padding
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0), // Add bottom padding
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -373,8 +379,8 @@ class EventCard extends StatelessWidget {
   final String location;
   EventCard(
       {required this.imageUrl,
-        required this.eventName,
-        required this.location});
+      required this.eventName,
+      required this.location});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -450,8 +456,8 @@ class FoodStoreCard extends StatelessWidget {
 
   FoodStoreCard(
       {required this.imageUrl,
-        required this.storeName,
-        required this.location});
+      required this.storeName,
+      required this.location});
 
   @override
   Widget build(BuildContext context) {
