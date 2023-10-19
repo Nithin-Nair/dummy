@@ -47,9 +47,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
         }
 
         final data = snapshot.data!.data() as Map<String, dynamic>;
-        final profileImage = data['profile_image'] ??
-            'https://firebasestorage.googleapis.com/v0/b/dummy-proj-221a5.appspot.com/o/foodStores%2Fshrirang%40gmail.com%2Fsr.jpg?alt=media&token=a16908bc-c9a4-4f5d-8e77-af57d6548b32';
-
+        final profileImage = data['profile_image'] as String;
         return Scaffold(
           backgroundColor: Color(0xFFf2f2f2),
           appBar: AppBar(
