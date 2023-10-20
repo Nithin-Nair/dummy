@@ -37,7 +37,7 @@ class _StreamEventState extends State<StreamEvent> {
               data['eventCell'],
               data['eventLocation'],
               data['eventDate'].toDate(), // Convert Timestamp to DateTime
-              data['eventPrice'],
+              data['eventFormLink'],
               data['eventDescription'],
             );
           }).toList(),
