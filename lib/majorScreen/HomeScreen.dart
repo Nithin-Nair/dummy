@@ -162,46 +162,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 20), // Add some vertical spacing
                 Padding(
-                  padding: const EdgeInsets.only(
-                      right: 16.0), // Right padding for search bar
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300], // Gray background color
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        border: InputBorder.none,
-                        // Add a clear button to the search bar
-                        // Add a search icon or button to the search bar
-                        prefixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            // Perform the search here
-                          },
-                        ),
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            // Perform the action for img_2.png icon here
-                          },
-                          child: Image.asset(
-                            'assets/img_2.png',
-                            width: 10,
-                            height: 10,
-                          ),
-                        ),
-                      ),
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20), // Add some vertical spacing
-                Padding(
                   padding:
                       const EdgeInsets.only(bottom: 8.0), // Add bottom padding
                   child: Row(

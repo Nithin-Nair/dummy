@@ -74,9 +74,8 @@ class _EditOwnerProfileState extends State<EditOwnerProfile> {
     try {
       final pickedImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
-        maxHeight: 300,
-        maxWidth: 300,
-        imageQuality: 100, // Set image quality to 100
+        maxHeight: 720,
+        maxWidth: 720,
       );
       if (pickedImage != null) {
         setState(() {
