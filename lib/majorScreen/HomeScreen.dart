@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'Carousel.dart';
+import 'Carousel2.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key});
@@ -211,6 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => Carousel()));
                         },
                       ),
+
                       Container(
                         child: Image.asset(
                           'assets/img_6.png',
@@ -218,12 +220,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 200,
                         ),
                       ),
-                      Container(
-                        child: Image.asset(
-                          'assets/img_7.png',
-                          width: 400,
-                          height: 200,
+                      GestureDetector(
+                        child: Container(
+                          child: Image.asset(
+                            'assets/img_7.png',
+                            width: 400,
+                            height: 200,
+                          ),
                         ),
+                        onTap: () {
+                          // Navigate to Carousel.dart screen
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => Carousel2()));
+                        },
                       ),
                       // Add more carousel items as needed
                     ],

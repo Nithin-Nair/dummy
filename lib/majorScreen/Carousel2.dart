@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-class Carousel extends StatefulWidget {
-  const Carousel({
+class Carousel2 extends StatefulWidget {
+  const Carousel2({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Carousel> createState() => _CarouselState();
+  State<Carousel2> createState() => _CarouselState2();
 }
 
-class _CarouselState extends State<Carousel> {
-  final String name = 'Ganesh Chaturthi';
-  final String eimage = 'assets/images/g.jpg'; // Assuming the image is in the 'assets' directory
-  final String eventDescription = 'Ganesh Chaturthi is a Hindu festival that celebrates the birth of Lord Ganesha, the god of wisdom and prosperity. It is one of the most popular Hindu festivals, celebrated by millions of people around the world.';
-  final int edate = 19;
-  final String emonth = ' September, 2023';
-  final String elocation = 'Football Ground';
+class _CarouselState2 extends State<Carousel2> {
+  final String name = 'Durga Puja';
+  final String eimage = 'assets/images/maa.jpg'; // Assuming the image is in the 'assets' directory
+  final String eventDescription =
+      "Durga Puja, also known as Durgotsava or Sharodotsav, is an annual Hindu festival originating in the Indian subcontinent which reveres and pays homage to the Hindu goddess Maa Durga.";
+  final int edate = 20;
+  final String emonth = ' October, 2023';
+  final String elocation = 'Opp. University Temple';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +41,7 @@ class _CarouselState extends State<Carousel> {
             backgroundColor: Colors.transparent,
             elevation: 0, // Remove the elevation to make it flat
             title: Text(
-              'Ganesha Chaturthi',
+              'Durga Puja',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 21,
